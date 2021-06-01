@@ -18,23 +18,39 @@ class Assistant(commands.Cog):
 
     @commands.command()
     async def stop(self, ctx):
-        """ Disconnect bot from channel """
-        await ctx.voice_client.disconnect()
+        """ Disconnect bot from voice channel """
+        if ctx.voice_client:
+            await ctx.voice_client.disconnect()
+            await ctx.send("See you")
+        else:
+            await ctx.send("I am not connected to a voice channel")
 
     @commands.command()
-    async def create_channel(self, ctx, *, name, text_channel=True):
-        channel_name = name
-        if text_channel:
-            await ctx.send("Creating text channel")
-        ctx.send("Creating voice channel")
+    async def create_channel(self, ctx, *args):
+        name = args[0]
+        text_channel = True if len(args) == 1  else False
+        text_channel_name = name + " text"
+        guild = ctx.guild
+        
+        existing_channel = discord.utils.get(guild.channels, name=name) or discord.utils.get(guild.channels, name=text_channel_name)
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("!AB"), )
+        if not existing_channel:
+            await ctx.send("Creating new voice channel")
+            await guild.create_voice_channel(name)
+
+            if text_channel:
+                await ctx.send("Creating text channel")
+                await guild.create_text_channel(text_channel_name)
+        else:
+            await ctx.send("The name is already being used for other channel")
+
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), )
 
 @bot.event
 async def on_ready():
     print("Logged in as {} \n".format(bot.user))
 
-load_doatenv()
+load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 bot.add_cog(Assistant(bot))
