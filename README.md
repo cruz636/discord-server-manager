@@ -12,13 +12,14 @@ STEPS:
 3. Add AssistantBot to the server with the following [link](https://discord.com/api/oauth2/authorize?client_id=849368683326734388&permissions=8&scope=bot)
 4. Congratulations! The assistant is ready to help you! You can call the bot by writing !AB on any text channel. Here are the list of commands for you to use
 
-`!M create_channel [name of the channel] [options]`
+`!create_channel [name of the channel] [options]` 
 
 By default this will create a voice channel and a text channel. If you only want to be a voice or a text channel add the following options:
 `-ov` for a voice and `-ot` for a text channel
+### example: `!create_channel "ONLY VOICE CHANNEL" -ov
 
-`!M welcome_message "welcome message for a new user"`
-
+`!edit_welcome_message "welcome message for a new user"`
+`!welcome_message` see current welcome message
 
 
 
