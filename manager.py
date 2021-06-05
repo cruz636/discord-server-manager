@@ -26,6 +26,32 @@ class Assistant(commands.Cog):
             await ctx.send("I am not connected to a voice channel")
 
     @commands.command()
+    async def roles(self, ctx):
+        guild = ctx.guild
+        roles = [] 
+        for role in guild.roles:
+            if(role.name == "@everyone"):
+                # avoid calling @everyone when prints the roles 
+                roles.append("everyone")
+            else:
+                roles.append(role.name)
+        
+        await ctx.send(roles)
+
+    @commands.command()
+    async def create_moderator_role(self, ctx, *args):
+        role = args[0]
+        params = discord.Permissions.stage_moderator()
+
+        guild = ctx.guild
+        await guild.create_role(name=role, permissions=params, colour= discord.Colour.random(), hoist=True)
+        print("creating role {0} with moderator permissions".format(role))
+        
+        message = f"Moderator role {role} created. To add this role to a user, use set_role command"
+
+        await ctx.send(message)
+
+    @commands.command()
     async def edit_welcome_message(self, ctx, message):
         # add the message to the .env
         set_key('.env', 'WELCOME_MESSAGE', message)
